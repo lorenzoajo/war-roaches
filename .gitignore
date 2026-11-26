@@ -6,3 +6,5 @@ result
 .devenv/
 .devenv.flake.nix
 *.log
+.devenv*
+devenv.local.nix

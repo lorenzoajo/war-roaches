@@ -15,11 +15,11 @@ Hot-seat artillery chaos for 2–4 players on one phone or tablet. Cute cartoon 
 
 ## Develop
 ```sh
-nix develop --no-pure-eval   # or: direnv allow
-npm install
-npm run dev                  # open the LAN URL on your phone
-npm test
+devenv up                    # installs deps + Vite dev server on :5173 (LAN, open it on your phone)
+devenv test                  # typecheck + unit tests
+devenv shell                 # shell with node; `preview` builds and serves the PWA on :4173
 ```
+Flake equivalents: `nix develop --no-pure-eval` (or `direnv allow`), then `devenv up` inside it; or `nix run .#devenv-up --no-pure-eval`.
 Dev-only visual sandbox: `/war-roaches/?dev=map&map=cake&zoom=0.8` (tap to explode), `&strip=1` shows all roach styles.
 
 ## Build

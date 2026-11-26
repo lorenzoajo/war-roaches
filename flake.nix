@@ -22,6 +22,8 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
+          devenv-up = self.devShells.${system}.default.config.procfileScript;
+          devenv-test = self.devShells.${system}.default.config.test;
           default = pkgs.buildNpmPackage {
             pname = "war-roaches";
             version = "0.1.0";
