@@ -4,6 +4,8 @@ import { Material } from '../core/types'
 import type { MapDef, MapProp } from './mapDef'
 import { coatSurface, ellipse, jitter, roundedRect } from './shapes'
 
+const CRATER_RX = 110
+
 interface Tier { x: number; y: number; w: number; h: number }
 interface Layout { tiers: Tier[]; candleXs: number[]; cupcakes: { x: number; y: number }[] }
 
@@ -17,9 +19,23 @@ function layout(rng: Rng): Layout {
   const count = rng.int(5, 7)
   const candleXs = Array.from({ length: count }, (_, i) => {
     const t = tiers[i % 2 === 0 ? 0 : 1]!
-    return t.x + 60 + ((i + 0.5) / count) * (t.w - 120)
+    const x = t.x + 60 + ((i + 0.5) / count) * (t.w - 120)
+    const crater = tiers[2]!.x + tiers[2]!.w / 2
+    const placed = Math.abs(x - crater) < CRATER_RX + 20 ? crater + Math.sign(x - crater || 1) * (CRATER_RX + 50) : x
+    return avoidCorners(tiers, placed)
   })
   return { tiers, candleXs, cupcakes: [{ x: 160, y: 640 + j(40) }, { x: 2240, y: 640 + j(40) }] }
+}
+
+const CORNER = 34
+
+/** Keeps candles off the rounded tier corners so they stand on flat cake. */
+function avoidCorners(tiers: Tier[], x: number): number {
+  for (const t of tiers) {
+    if (x > t.x - CORNER && x < t.x + CORNER) return t.x + CORNER + 6
+    if (x > t.x + t.w - CORNER && x < t.x + t.w + CORNER) return t.x + t.w - CORNER - 6
+  }
+  return x
 }
 
 function tierTopAt(tiers: Tier[], x: number): number {
@@ -48,7 +64,7 @@ export const cake: MapDef = {
     mask.fillRect(200, 1050, 2000, 30, Material.Solid)
     for (const t of L.tiers) roundedRect(mask, t.x, t.y, t.w, t.h + 20, 24, Material.Normal)
     const top = L.tiers[2]!
-    ellipse(mask, top.x + top.w / 2, top.y, 110, 70, Material.Air) // volcano crater
+    ellipse(mask, top.x + top.w / 2, top.y, CRATER_RX, 70, Material.Air) // volcano crater
     for (const c of L.cupcakes) roundedRect(mask, c.x - 70, c.y, 140, 90, 30, Material.Normal)
     coatSurface(mask, 0, 2400, 6, Material.Slippery)
   },

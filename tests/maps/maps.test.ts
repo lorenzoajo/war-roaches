@@ -53,3 +53,16 @@ describe('maps', () => {
     expect(candles.length).toBeLessThanOrEqual(7)
   })
 })
+
+describe('cake candles', () => {
+  it('every candle stands on solid ground', () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      const m = new TerrainMask(WORLD_W, WORLD_H)
+      MAPS.cake.generate(m, new Rng(seed))
+      for (const c of MAPS.cake.props(new Rng(seed)).filter((p) => p.kind === 'candle')) {
+        expect(m.isSolid(c.x, c.y + 2)).toBe(true)
+        expect(m.isSolid(c.x, c.y - 4)).toBe(false)
+      }
+    }
+  })
+})
