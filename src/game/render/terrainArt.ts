@@ -2,7 +2,7 @@ import { Texture } from 'pixi.js'
 import type { TerrainMask } from '../core/terrain'
 import { Material, type Vec2 } from '../core/types'
 import type { MapTheme } from '../maps/mapDef'
-import { hash2, mix, rgb } from './color'
+import { css, hash2, mix, rgb } from './color'
 
 const DEPTH_SHADE = 140
 const RIM_WIDTH = 7
@@ -39,7 +39,6 @@ export class TerrainArt {
     const img = this.ctx.createImageData(w, h)
     const px = img.data
     const dark = this.theme.terrainDark
-    const accents = this.theme.accents
     for (let x = 0; x < w; x++) {
       let depth = 0
       for (let y = 0; y < h; y++) {
@@ -55,8 +54,6 @@ export class TerrainArt {
         else if (depth <= 6) c = mix(c, this.theme.rim, 0.25)
         else {
           c = mix(c, dark, Math.min(0.65, depth / DEPTH_SHADE))
-          const blob = hash2(x >> 3, y >> 3)
-          if (blob < 0.05 && accents.length > 0) c = mix(c, accents[Math.floor(blob * 1000) % accents.length]!, 0.55)
         }
         if (m !== Material.Normal && depth > 10 && m !== Material.Solid) c = mix(materialColor(Material.Normal, this.theme), dark, Math.min(0.65, depth / DEPTH_SHADE))
         const sideAir = this.mask.get(x - 1, y) === Material.Air || this.mask.get(x + 1, y) === Material.Air
@@ -71,6 +68,28 @@ export class TerrainArt {
       }
     }
     this.ctx.putImageData(img, 0, 0)
+    this.paintSpeckles()
+  }
+
+  /** Round accent dots (sprinkles, cheese holes, crumbs) painted only onto existing terrain. */
+  private paintSpeckles(): void {
+    const ctx = this.ctx
+    const accents = this.theme.accents
+    if (accents.length === 0) return
+    ctx.save()
+    ctx.globalCompositeOperation = 'source-atop'
+    const count = Math.floor((this.mask.width * this.mask.height) / 2600)
+    for (let i = 0; i < count; i++) {
+      const x = hash2(i, 17) * this.mask.width, y = hash2(i, 91) * this.mask.height
+      if (!this.mask.isSolid(x, y - 10) || this.mask.get(x, y) === Material.Solid) continue
+      const r = 2 + hash2(i, 5) * 5
+      ctx.globalAlpha = 0.35 + hash2(i, 7) * 0.3
+      ctx.fillStyle = css(accents[i % accents.length]!)
+      ctx.beginPath()
+      ctx.ellipse(x, y, r, r * (0.6 + hash2(i, 3) * 0.4), hash2(i, 11) * Math.PI, 0, Math.PI * 2)
+      ctx.fill()
+    }
+    ctx.restore()
   }
 
   /** Mirrors mask.carveCircle: clears air pixels in the bbox and scorches the crater edge. */
