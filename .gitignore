@@ -1,0 +1,8 @@
+.superpowers/
+node_modules/
+dist/
+result
+.direnv/
+.devenv/
+.devenv.flake.nix
+*.log
