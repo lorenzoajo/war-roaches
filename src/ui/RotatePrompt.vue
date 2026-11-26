@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted } from 'vue'
+import { store } from './store'
 
-const portrait = ref(false)
 let mq: MediaQueryList | null = null
 const update = (): void => {
-  portrait.value = mq?.matches ?? false
+  store.portrait = mq?.matches ?? false
 }
 onMounted(() => {
   mq = window.matchMedia('(orientation: portrait)')
@@ -15,7 +15,7 @@ onBeforeUnmount(() => mq?.removeEventListener('change', update))
 </script>
 
 <template>
-  <div v-if="portrait" class="rotate">
+  <div v-if="store.portrait" class="rotate">
     <div class="phone">📱</div>
     <p class="title">Turn your phone sideways!</p>
   </div>

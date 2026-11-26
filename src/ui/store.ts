@@ -32,6 +32,7 @@ export const store = reactive({
   config: { ...loadSetup(), seed: 1 } as MatchConfig,
   muted: sfx.isMuted(),
   matchKey: 0,
+  portrait: false,
 })
 
 export function go(screen: Screen): void {

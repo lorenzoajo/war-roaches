@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import type { HudSnapshot } from '../game/core/game'
 import { ARCHETYPES } from '../game/core/archetypes'
 import { WEAPONS } from '../game/core/weapons'
+import { HeldDirections } from '../game/input/heldDirections'
 
 const props = defineProps<{ hud: HudSnapshot }>()
 const emit = defineEmits<{ move: [dir: -1 | 0 | 1]; jump: [pressed: boolean]; weapons: []; special: [] }>()
@@ -15,11 +16,12 @@ const ammo = computed(() => {
 })
 const special = computed(() => ARCHETYPES[props.hud.activeKind].special)
 
+const held = new HeldDirections()
 const press = (dir: -1 | 1) => (e: PointerEvent): void => {
   ;(e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId)
-  emit('move', dir)
+  emit('move', held.press(e.pointerId, dir))
 }
-const release = (): void => emit('move', 0)
+const release = (e: PointerEvent): void => emit('move', held.release(e.pointerId))
 </script>
 
 <template>

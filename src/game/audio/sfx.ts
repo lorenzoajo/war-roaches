@@ -1,4 +1,5 @@
 import { logger } from '../../lib/logger'
+import { needsResume } from './resume'
 
 const MUTE_KEY = 'wr.muted'
 
@@ -65,7 +66,7 @@ export const sfx = {
         master.gain.value = 0.5
         master.connect(ctx.destination)
       }
-      if (ctx.state === 'suspended') void ctx.resume()
+      if (needsResume(ctx.state)) void ctx.resume()
     } catch (err) {
       logger.error('audio unlock failed', err)
     }

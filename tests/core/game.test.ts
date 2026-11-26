@@ -201,3 +201,40 @@ describe('Game', () => {
     expect(a.world.roaches.map((r) => [r.pos.x, r.pos.y, r.hp])).toEqual(b.world.roaches.map((r) => [r.pos.x, r.pos.y, r.hp]))
   })
 })
+
+describe('Game review fixes', () => {
+  it('hazard spit-back clears the rope', () => {
+    const g = new Game(cfg())
+    g.command({ type: 'beginTurn' })
+    const r = g.activeRoach()!
+    r.pos.y = g.world.hazardY + 10
+    g.rope = { anchor: { x: r.pos.x, y: r.pos.y - 100 }, length: 100 }
+    run(g, 0.1)
+    expect(g.rope).toBeNull()
+  })
+
+  it('capped settle leaves no projectiles behind', () => {
+    const g = new Game(cfg())
+    g.command({ type: 'beginTurn' })
+    g.command({ type: 'fire', angle: -Math.PI / 2, power: 0.01 })
+    const p = g.world.projectiles[0]!
+    p.fuse = Infinity
+    p.weapon = 'grenade'
+    run(g, 3 + 10.5)
+    expect(g.phase).toBe('handoff')
+    expect(g.world.projectiles.length).toBe(0)
+  })
+
+  it('reselects a living roach if the chosen one died during handoff', () => {
+    const g = new Game(cfg())
+    const team = g.team
+    const r = g.activeRoach()!
+    r.hp = 0
+    r.alive = false
+    g.command({ type: 'beginTurn' })
+    expect(g.activeRoach()?.alive).toBe(true)
+    expect(g.activeRoach()?.team).toBe(team)
+    run(g, 1)
+    expect(g.phase).toBe('turn')
+  })
+})

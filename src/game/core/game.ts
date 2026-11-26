@@ -257,6 +257,7 @@ export class Game {
   }
 
   private startTurn(): void {
+    if (!this.activeRoach()?.alive) this.prepareTurn()
     this.phase = 'turn'
     this.timeLeft = this.config.turnTime
     this.turnFlags = { fullPreview: false }
@@ -317,7 +318,7 @@ export class Game {
     stepMines(w, TICK)
     if (this.map.physics.bubbles) stepBubbles(w, TICK)
     stepCrates(w, this.ammo, TICK)
-    for (const r of w.roaches) applyHazard(w, r)
+    for (const r of w.roaches) if (applyHazard(w, r) && r === active) this.rope = null
 
     if (this.phase === 'turn' || this.phase === 'retreat' || this.phase === 'settling') this.elapsed += TICK
     if (controlling) {
@@ -344,6 +345,9 @@ export class Game {
 
   private endTurn(): void {
     const w = this.world
+    // A capped settle may leave stragglers; drop them so they can't haunt the next turn.
+    w.projectiles = []
+    w.mines = w.mines.filter((m) => m.triggered < 0)
     applyCloudsEndOfTurn(w)
     if (this.elapsed >= SUDDEN_DEATH_AT) {
       this.suddenDeath = true

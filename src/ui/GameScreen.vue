@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { Game, type HudSnapshot } from '../game/core/game'
 import { GameView } from '../game/render/gameView'
 import { PointerRouter, type PointerIntent } from '../game/input/pointerRouter'
@@ -81,6 +81,15 @@ function setPaused(p: boolean): void {
   game.paused = p
   if (p) game.command({ type: 'move', dir: 0 })
 }
+
+// Turning the phone upright hides the board behind the rotate prompt: freeze the turn and show Pause on return.
+watch(
+  () => store.portrait,
+  (portrait) => {
+    if (portrait && !victory.value) setPaused(true)
+  },
+  { immediate: true },
+)
 
 function begin(): void {
   sfx.unlock()
