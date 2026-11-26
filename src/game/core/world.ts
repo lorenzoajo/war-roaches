@@ -20,6 +20,7 @@ export class World {
   bubbles: Bubble[] = []
   candles: Candle[] = []
   wind = 0
+  bubbleClock = 0
   hazardY = HAZARD_Y
   events: GameEvent[] = []
   explodeHooks: ExplodeHook[] = []
