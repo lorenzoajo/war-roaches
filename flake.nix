@@ -27,7 +27,7 @@
             version = "0.1.0";
             src = nixpkgs.lib.cleanSource ./.;
             nodejs = pkgs.nodejs_22;
-            npmDepsHash = "sha256-ztneZa/e1vkNdSlF6SPDlGTj1xL7OX4h7xNVyKvsl9k=";
+            npmDepsHash = "sha256-eaAULvpNi4CFfR2C/UL1LjSqlGFgunyld5KXVNZOKK8=";
             installPhase = ''
               runHook preInstall
               cp -r dist $out
