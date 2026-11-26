@@ -17,7 +17,7 @@ const color = computed(() => css(team.value?.color ?? 0xffffff))
     <RoachBadge :color="color" :size="110" />
     <h1 class="title">Pass to {{ team?.name }}!</h1>
     <p class="who"><b>{{ props.hud.activeName }}</b> the {{ kind.label }} · ★ {{ kind.special }}</p>
-    <p class="tap">Tap to start</p>
+    <p class="tap">Tap to start <span class="kbd">(or press Space)</span></p>
   </button>
 </template>
 
@@ -29,6 +29,7 @@ const color = computed(() => css(team.value?.color ?? 0xffffff))
 }
 h1 { font-size: clamp(36px, 8vw, 72px); margin: 4px 0; font-weight: 400; }
 .who { margin: 0; font-size: 20px; }
+@media (hover: none) { .kbd { display: none; } }
 .tap { margin: 14px 0 0; font-size: 18px; font-weight: 800; animation: blink 1.2s infinite; }
 @keyframes blink { 50% { opacity: 0.4; } }
 </style>

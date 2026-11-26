@@ -5,8 +5,8 @@ import { go, store, toggleMute } from './store'
 
 const showHelp = ref(false)
 const cards = [
-  { emoji: '👆', title: 'Pull & let go', text: 'Drag back from your roach like a slingshot. Let go to fire. Drag back onto the roach to cancel.' },
-  { emoji: '🏃', title: 'Move & glide', text: '◀ ▶ to walk, ⤴ to jump. Hold jump in the air to glide on tiny wings.' },
+  { emoji: '👆', title: 'Pull & let go', text: 'Drag back from your roach like a slingshot (finger or mouse). Let go to fire. Drag back onto the roach to cancel.' },
+  { emoji: '🏃', title: 'Move & glide', text: '◀ ▶ to walk, ⤴ to jump. Hold jump in the air to glide on tiny wings. On a PC: ← → / A D walk, ↑ / W / Space jump, Esc pauses.' },
   { emoji: '🎁', title: 'Grab crates', text: 'Crates hold silly weapons and pizza. Falling in the goo only hurts — roaches always bounce back!' },
 ]
 </script>

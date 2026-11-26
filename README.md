@@ -9,6 +9,7 @@ Hot-seat artillery chaos for 2–4 players on one phone or tablet. Cute cartoon 
 - **Move:** ◀ ▶ to walk, ⤴ to jump, hold ⤴ in the air to glide (no fall damage).
 - **Shoot:** drag back from your roach like a slingshot and let go. Drag back onto the roach to cancel.
 - **Camera:** drag the map with one finger, pinch to zoom.
+- **Keyboard (PC):** ← → or A/D walk, ↑ / W / Space jump (hold to glide), Space/Enter starts your turn, Esc/P pauses. Aim and fire with a mouse drag.
 - **Weapons:** Bazooka, Grenade (adjustable fuse) and Slipper are unlimited; crates hold Bug Spray, Big Shoe (tap where to stomp), Disco Bomb, Gum Mine, Hot Sauce, Rubber Duck, Toothpick Rope and Pizza (+35 HP).
 - **Roaches:** Chonk (tanky, Belly Slam), Stilts (huge jumps, Periscope = full aim preview), Brawler (double melee, Mega Flick), Zippy (fast, double jump, Scuttle Dash).
 - Falling into the goo costs 30 HP and spits you back — roaches are hard to kill. Last team standing wins. After 12 minutes the goo starts rising.

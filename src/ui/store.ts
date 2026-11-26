@@ -60,6 +60,8 @@ export function toggleMute(): void {
 /** Fullscreen + landscape lock; both are best-effort and unsupported on some browsers. */
 export async function enterImmersive(): Promise<void> {
   sfx.unlock()
+  // Desktop: stay windowed so Esc pauses instead of being eaten by "exit fullscreen".
+  if (!window.matchMedia('(pointer: coarse)').matches) return
   try {
     if (!document.fullscreenElement && document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen({ navigationUI: 'hide' })
   } catch (err) {

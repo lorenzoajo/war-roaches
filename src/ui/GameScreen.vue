@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vu
 import { Game, type HudSnapshot } from '../game/core/game'
 import { GameView } from '../game/render/gameView'
 import { PointerRouter, type PointerIntent } from '../game/input/pointerRouter'
+import { KeyboardInput, type KeyAction } from '../game/input/keyboard'
 import { WEAPONS } from '../game/core/weapons'
 import type { WeaponId } from '../game/core/types'
 import { sfx } from '../game/audio/sfx'
@@ -72,6 +73,29 @@ function onIntent(i: PointerIntent): void {
   }
 }
 
+function onKeyAction(a: KeyAction): void {
+  if (a === 'start') {
+    if (hud.value.phase === 'handoff' && !paused.value && !victory.value) begin()
+    return
+  }
+  if (picker.value) picker.value = false
+  else if (!victory.value) setPaused(!paused.value)
+}
+
+const keyboard = new KeyboardInput({
+  move: (dir) => game.command({ type: 'move', dir }),
+  jump: (pressed) => game.command({ type: 'jump', pressed }),
+  action: onKeyAction,
+})
+const typing = (e: KeyboardEvent): boolean => e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement
+const onKeyDown = (e: KeyboardEvent): void => {
+  if (!typing(e) && keyboard.keydown(e)) e.preventDefault()
+}
+const onKeyUp = (e: KeyboardEvent): void => {
+  if (!typing(e) && keyboard.keyup(e)) e.preventDefault()
+}
+const onBlur = (): void => keyboard.reset()
+
 function onVisibility(): void {
   if (document.hidden && !victory.value) setPaused(true)
 }
@@ -133,11 +157,17 @@ onMounted(async () => {
     onIntent,
   })
   document.addEventListener('visibilitychange', onVisibility)
+  window.addEventListener('keydown', onKeyDown)
+  window.addEventListener('keyup', onKeyUp)
+  window.addEventListener('blur', onBlur)
   if (import.meta.env.DEV) window.__wr = { game, view }
 })
 
 onBeforeUnmount(() => {
   document.removeEventListener('visibilitychange', onVisibility)
+  window.removeEventListener('keydown', onKeyDown)
+  window.removeEventListener('keyup', onKeyUp)
+  window.removeEventListener('blur', onBlur)
   clearTimeout(toastTimer)
   router?.destroy()
   view.destroy()

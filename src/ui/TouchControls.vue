@@ -22,6 +22,11 @@ const press = (dir: -1 | 1) => (e: PointerEvent): void => {
   emit('move', held.press(e.pointerId, dir))
 }
 const release = (e: PointerEvent): void => emit('move', held.release(e.pointerId))
+const jumpDown = (e: PointerEvent): void => {
+  ;(e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId)
+  emit('jump', true)
+}
+const jumpUp = (): void => emit('jump', false)
 </script>
 
 <template>
@@ -31,7 +36,7 @@ const release = (e: PointerEvent): void => emit('move', held.release(e.pointerId
         <button class="pad" aria-label="Walk left" @pointerdown="press(-1)($event)" @pointerup="release" @pointercancel="release" @lostpointercapture="release">◀</button>
         <button class="pad" aria-label="Walk right" @pointerdown="press(1)($event)" @pointerup="release" @pointercancel="release" @lostpointercapture="release">▶</button>
       </div>
-      <button class="pad jump" :aria-label="props.hud.roping ? 'Let go of rope' : 'Jump'" @pointerdown="emit('jump', true)" @pointerup="emit('jump', false)" @pointercancel="emit('jump', false)">
+      <button class="pad jump" :aria-label="props.hud.roping ? 'Let go of rope' : 'Jump'" @pointerdown="jumpDown" @pointerup="jumpUp" @pointercancel="jumpUp" @lostpointercapture="jumpUp">
         {{ props.hud.roping ? '✋' : '⤴' }}
       </button>
     </div>
