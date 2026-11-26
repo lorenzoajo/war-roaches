@@ -254,8 +254,7 @@ export class GameView {
 
   destroy(): void {
     this.resizeObs?.disconnect()
-    for (const v of this.roachViews.values()) v.destroy()
-    this.terrain?.destroy()
     if (this.mounted) this.app.destroy(true, { children: true })
+    this.terrain?.destroy()
   }
 }

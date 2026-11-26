@@ -1,0 +1,30 @@
+:root {
+  --bg: #1b1230;
+  --panel: #2d1f52;
+  --panel-2: #3d2a6e;
+  --ink: #2a1a2e;
+  --text: #ffffff;
+  --muted: #c9b8f0;
+  --accent: #ffd23f;
+  --good: #46d37a;
+  --bad: #ff4d5e;
+  --shadow: 0 5px 0 rgba(0, 0, 0, 0.35);
+  --title: 'Luckiest Guy', 'Baloo 2', system-ui, sans-serif;
+  --body: 'Baloo 2', system-ui, sans-serif;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+}
+body { font-family: var(--body); background: var(--bg); color: var(--text); }
+button { font-family: var(--body); color: inherit; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.btn {
+  border: 3px solid var(--ink); border-radius: 18px; background: var(--accent); color: var(--ink);
+  font-weight: 800; font-size: 20px; padding: 10px 22px; box-shadow: var(--shadow); cursor: pointer;
+  transition: transform 0.08s;
+}
+.btn:active { transform: translateY(3px) scale(0.97); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35); }
+.btn.secondary { background: var(--panel-2); color: var(--text); border-color: #120b22; }
+.btn.big { font-family: var(--title); font-size: 30px; letter-spacing: 1px; padding: 12px 36px; }
+.title { font-family: var(--title); letter-spacing: 1px; }
+.screen { position: fixed; inset: 0; padding: calc(12px + var(--sat)) calc(16px + var(--sar)) calc(12px + var(--sab)) calc(16px + var(--sal)); box-sizing: border-box; }
